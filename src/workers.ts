@@ -215,146 +215,208 @@ function toCSV(rows: any[]): string {
 }
 
 /** Single-file, TailwindCDN, minimal + modern */
-function indexHTML() {
-  return `<!doctype html>
-<html lang="hu">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+function indexHTML(){
+  return `<!doctype html><html lang="hu"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Tagnyilvántartási adatlap</title>
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-50 text-slate-900">
-  <main class="max-w-3xl mx-auto p-6">
-    <h1 class="text-2xl font-semibold mb-4">Tagnyilvántartási adatlap</h1>
-    <p class="text-sm text-slate-600 mb-6">Kérjük, pontosan töltse ki az alábbi űrlapot. A * jelölt mezők kötelezők.</p>
+<body class="bg-slate-100 text-slate-900">
+<main class="max-w-3xl mx-auto p-6 md:p-8">
+  <h1 class="text-2xl font-semibold mb-2">Tagnyilvántartási adatlap</h1>
+  <p class="text-sm text-slate-600 mb-6">Kérjük, pontosan töltse ki az alábbi űrlapot. A * jelölt mezők kötelezők.</p>
 
-    <form id="f" class="grid gap-4 bg-white p-6 rounded-2xl shadow">
-      <!-- Honeypot -->
-      <input name="website" class="hidden" tabindex="-1" autocomplete="off">
+  <form id="f" class="grid gap-6 bg-white/90 backdrop-blur rounded-2xl shadow-lg p-6 md:p-8">
+    <!-- Honeypot -->
+    <input name="website" class="hidden" tabindex="-1" autocomplete="off">
 
-      <section class="grid md:grid-cols-2 gap-4">
-        <div><label class="block text-sm mb-1">Előtag</label><input name="nev_elotag" class="input"></div>
-        <div><label class="block text-sm mb-1">Vezetéknév *</label><input name="nev_vezetek" required class="input"></div>
-        <div><label class="block text-sm mb-1">Keresztnév *</label><input name="nev_kereszt" required class="input"></div>
-        <div><label class="block text-sm mb-1">Utónév</label><input name="nev_utonev" class="input"></div>
-        <div class="md:col-span-2"><label class="block text-sm mb-1">Születési név</label><input name="szuletesi_nev" class="input"></div>
-        <div><label class="block text-sm mb-1">Születési ország</label><input name="szuletesi_orszag" class="input"></div>
-        <div><label class="block text-sm mb-1">Születési település</label><input name="szuletesi_telepules" class="input"></div>
-        <div><label class="block text-sm mb-1">Születési idő *</label><input type="date" name="szuletesi_datum" required class="input"></div>
-        <div><label class="block text-sm mb-1">Édesanyja leánykori neve</label><input name="anya_leanykori_nev" class="input"></div>
-        <div><label class="block text-sm mb-1">Édesapja neve</label><input name="apa_neve" class="input"></div>
-        <div class="md:col-span-2"><label class="block text-sm mb-1">Foglalkozás</label><input name="foglalkozas" class="input"></div>
-      </section>
+    <!-- Személyes -->
+    <section class="grid gap-4 md:grid-cols-2">
+      <div class="md:col-span-2">
+        <label class="label">Név *</label>
+        <input name="nev" required class="input" placeholder="Vezetéknév Keresztnév">
+      </div>
+      <div class="md:col-span-2">
+        <label class="label">Születési név</label>
+        <input name="szuletesi_nev" class="input">
+      </div>
+      <div>
+        <label class="label">Születési ország</label>
+        <input name="szuletesi_orszag" class="input">
+      </div>
+      <div>
+        <label class="label">Születési település</label>
+        <input name="szuletesi_telepules" class="input">
+      </div>
+      <div>
+        <label class="label">Születési idő *</label>
+        <input type="date" name="szuletesi_datum" required class="input">
+      </div>
+      <div>
+        <label class="label">Édesanyja leánykori neve</label>
+        <input name="anyja_leanykori_nev" class="input">
+      </div>
+      <div>
+        <label class="label">Édesapja neve</label>
+        <input name="apa_neve" class="input">
+      </div>
+      <div class="md:col-span-2">
+        <label class="label">Foglalkozás</label>
+        <input name="foglalkozas" class="input">
+      </div>
+    </section>
 
-      <h2 class="font-medium mt-4">Keresztség</h2>
-      <section class="grid md:grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm mb-1">Felekezet</label>
-          <select name="keresztelo_felekezet" class="input">
-            <option value=""></option><option>Evangélikus</option><option>Református</option><option>Római katolikus</option><option>Egyéb</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm mb-1">Helyben keresztelt?</label>
-          <select name="helyben_keresztelt" class="input"><option value="0"></option><option value="1">Igen</option><option value="0">Nem</option></select>
-        </div>
-        <div><label class="block text-sm mb-1">Ha nem, hol?</label><input name="keresztseg_helye" class="input"></div>
-        <div><label class="block text-sm mb-1">Keresztelés éve</label><input type="number" name="keresztseg_eve" class="input"></div>
-      </section>
+    <h2 class="section">Keresztség</h2>
+    <section class="grid gap-4 md:grid-cols-2">
+      <div>
+        <label class="label">Felekezet</label>
+        <select name="keresztelo_felekezet" class="input">
+          <option value=""></option><option>Evangélikus</option><option>Református</option><option>Római katolikus</option><option>Egyéb</option>
+        </select>
+      </div>
+      <div>
+        <label class="label">Helyben keresztelt?</label>
+        <select name="helyben_keresztelt" class="input"><option value=""></option><option value="1">Igen</option><option value="0">Nem</option></select>
+      </div>
+      <div>
+        <label class="label">Ha nem, hol?</label>
+        <input name="keresztseg_helye" class="input">
+      </div>
+      <div>
+        <label class="label">Keresztelés éve</label>
+        <input type="number" name="keresztseg_eve" class="input" placeholder="YYYY">
+      </div>
+    </section>
 
-      <h2 class="font-medium mt-4">Konfirmáció</h2>
-      <section class="grid md:grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm mb-1">Konfirmált?</label>
-          <select name="konfirmalt" class="input"><option value="0"></option><option value="1">Igen</option><option value="0">Nem</option></select>
-        </div>
-        <div>
-          <label class="block text-sm mb-1">Konfirmáló felekezet</label>
-          <select name="konfirmalo_felekezet" class="input">
-            <option value=""></option><option>Evangélikus</option><option>Református</option><option>Egyéb</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm mb-1">Helyben konfirmált?</label>
-          <select name="helyben_konfirmalt" class="input"><option value="0"></option><option value="1">Igen</option><option value="0">Nem</option></select>
-        </div>
-        <div><label class="block text-sm mb-1">Ha nem, hol?</label><input name="konfirmacio_helye" class="input"></div>
-        <div><label class="block text-sm mb-1">Konfirmáció éve</label><input type="number" name="konfirmacio_eve" class="input"></div>
-      </section>
+    <h2 class="section">Konfirmáció</h2>
+    <section class="grid gap-4 md:grid-cols-2">
+      <div>
+        <label class="label">Konfirmált?</label>
+        <select name="konfirmalt" class="input"><option value=""></option><option value="1">Igen</option><option value="0">Nem</option></select>
+      </div>
+      <div>
+        <label class="label">Konfirmáló felekezet</label>
+        <select name="konfirmalo_felekezet" class="input"><option value=""></option><option>Evangélikus</option><option>Református</option><option>Egyéb</option></select>
+      </div>
+      <div>
+        <label class="label">Helyben konfirmált?</label>
+        <select name="helyben_konfirmalt" class="input"><option value=""></option><option value="1">Igen</option><option value="0">Nem</option></select>
+      </div>
+      <div>
+        <label class="label">Ha nem, hol?</label>
+        <input name="konfirmacio_helye" class="input">
+      </div>
+      <div>
+        <label class="label">Konfirmáció éve</label>
+        <input type="number" name="konfirmacio_eve" class="input" placeholder="YYYY">
+      </div>
+    </section>
 
-      <h2 class="font-medium mt-4">Családi állapot</h2>
-      <section class="grid md:grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm mb-1">Házas?</label>
-          <select name="hazas" class="input"><option value="0"></option><option value="1">Igen</option><option value="0">Nem</option></select>
-        </div>
-        <div>
-          <label class="block text-sm mb-1">Ha nem házas (státusz)</label>
-          <select name="nem_hazas_statusz" class="input">
-            <option value=""></option><option>elvált</option><option>özvegy</option><option>hajadon</option><option>nőtlen</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm mb-1">Helyben kötött házasság?</label>
-          <select name="helyben_hazassag" class="input"><option value="0"></option><option value="1">Igen</option><option value="0">Nem</option></select>
-        </div>
-        <div><label class="block text-sm mb-1">Ha nem, hol?</label><input name="hazassag_helye" class="input"></div>
-        <div><label class="block text-sm mb-1">Házasságkötés éve</label><input type="number" name="hazassag_eve" class="input"></div>
-        <div><label class="block text-sm mb-1">Házastárs neve</label><input name="hazastars_neve" class="input"></div>
-      </section>
+    <h2 class="section">Családi állapot</h2>
+    <section class="grid gap-4 md:grid-cols-2">
+      <div>
+        <label class="label">Házas?</label>
+        <select name="hazas" class="input"><option value=""></option><option value="1">Igen</option><option value="0">Nem</option></select>
+      </div>
+      <div>
+        <label class="label">Ha nem házas (státusz)</label>
+        <select name="nem_hazas_statusz" class="input">
+          <option value=""></option><option>elvált</option><option>özvegy</option><option>hajadon</option><option>nőtlen</option>
+        </select>
+      </div>
+      <div>
+        <label class="label">Helyben kötött házasság?</label>
+        <select name="helyben_hazassag" class="input"><option value=""></option><option value="1">Igen</option><option value="0">Nem</option></select>
+      </div>
+      <div>
+        <label class="label">Ha nem, hol?</label>
+        <input name="hazassag_helye" class="input">
+      </div>
+      <div>
+        <label class="label">Házasságkötés éve</label>
+        <input type="number" name="hazassag_eve" class="input" placeholder="YYYY">
+      </div>
+      <div>
+        <label class="label">Házastárs neve</label>
+        <input name="hazastars_neve" class="input">
+      </div>
+    </section>
 
-      <h2 class="font-medium mt-4">Lakcím</h2>
-      <section class="grid md:grid-cols-2 gap-4">
-        <div><label class="block text-sm mb-1">Irányítószám</label><input name="irsz" class="input"></div>
-        <div><label class="block text-sm mb-1">Város</label><input name="varos" class="input"></div>
-        <div class="md:col-span-2"><label class="block text-sm mb-1">Utca, házszám</label><input name="utca_hazszam" class="input"></div>
-        <div class="md:col-span-2"><label class="block text-sm mb-1">Épület, emelet, ajtó</label><input name="epulet_emelet_ajto" class="input"></div>
-      </section>
+    <h2 class="section">Lakcím</h2>
+    <section class="grid gap-4 md:grid-cols-2">
+      <div>
+        <label class="label">Irányítószám</label>
+        <input name="iranyitoszam" class="input" placeholder="1146">
+      </div>
+      <div>
+        <label class="label">Város</label>
+        <input name="varos" class="input" placeholder="Budapest">
+      </div>
+      <div class="md:col-span-2">
+        <label class="label">Utca, házszám</label>
+        <input name="utca_hazszam" class="input">
+      </div>
+      <div class="md:col-span-2">
+        <label class="label">Épület, emelet, ajtó</label>
+        <input name="epulet_emelet_ajto" class="input">
+      </div>
+    </section>
 
-      <h2 class="font-medium mt-4">Elérhetőségek</h2>
-      <section class="grid md:grid-cols-2 gap-4">
-        <div><label class="block text-sm mb-1">Telefon *</label><input name="telefon" required placeholder="06 1 123 4567" class="input"></div>
-        <div><label class="block text-sm mb-1">E-mail *</label><input type="email" name="email" required class="input"></div>
-      </section>
+    <h2 class="section">Elérhetőségek</h2>
+    <section class="grid gap-4 md:grid-cols-2">
+      <div>
+        <label class="label">Telefon *</label>
+        <input name="telefon" required class="input" placeholder="06 1 123 4567">
+      </div>
+      <div>
+        <label class="label">E-mail *</label>
+        <input type="email" name="email" required class="input" placeholder="nev@example.com">
+      </div>
+    </section>
 
-      <h2 class="font-medium mt-4">Egyéb</h2>
-      <section class="grid md:grid-cols-2 gap-4">
-        <div class="md:col-span-2">
-          <label class="block text-sm mb-1">Amennyiben nem zuglói lakos, tagja-e a lakóhelye szerinti egyházközségnek is?</label>
-          <input name="nem_zugloi_tag_helyi_egyhaz" class="input">
-        </div>
-        <div><label class="inline-flex gap-2 items-center"><input type="checkbox" name="consent_contact" value="1" required><span>Hozzájárulok a kapcsolattartáshoz és tájékoztatókhoz *</span></label></div>
-        <div><label class="inline-flex gap-2 items-center"><input type="checkbox" name="consent_processing" value="1" required><span>Megismertem és elfogadom az adatkezelési tájékoztatót *</span></label></div>
-        <div><label class="block text-sm mb-1">Hely</label><input name="hely" class="input"></div>
-        <div><label class="block text-sm mb-1">Dátum</label><input type="date" name="datum" class="input"></div>
-        <div class="md:col-span-2"><label class="block text-sm mb-1">Aláírás (gépelve)</label><input name="alairas" class="input"></div>
-      </section>
+    <h2 class="section">Egyéb</h2>
+    <section class="grid gap-4">
+      <div>
+        <label class="label">Amennyiben nem zuglói lakos, tagja-e a lakóhelye szerinti egyházközségnek is?</label>
+        <input name="nem_zugloi_tag_helyi_egyhaz" class="input">
+      </div>
+      <div class="grid gap-2">
+        <label class="inline-flex gap-2 items-center"><input type="checkbox" name="consent_contact" value="1" required><span>Hozzájárulok a kapcsolattartáshoz és tájékoztatókhoz *</span></label>
+        <label class="inline-flex gap-2 items-center"><input type="checkbox" name="consent_processing" value="1" required><span>Megismertem és elfogadom az adatkezelési tájékoztatót *</span></label>
+      </div>
+      <!-- hely / dátum / aláírás intentionally removed -->
+    </section>
 
-      <button class="bg-slate-900 text-white rounded-xl px-4 py-2">Beküldés</button>
-      <p id="msg" class="text-sm"></p>
-    </form>
-  </main>
+    <button class="bg-slate-900 text-white rounded-xl px-5 py-2.5 shadow hover:opacity-90">Beküldés</button>
+    <p id="msg" class="text-sm"></p>
+  </form>
+</main>
 
-  <style>
-    .input{ @apply w-full border rounded-xl px-3 py-2 border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-400; }
-  </style>
+<style>
+  .label{font-size:0.9rem; margin-bottom:0.25rem; display:block;}
+  .input{
+    width:100%; box-sizing:border-box;
+    padding:0.6rem 0.8rem; border-radius:0.75rem;
+    border:1px solid rgb(203 213 225);
+    background: rgba(255,255,255,0.85);
+    color:#0f172a;
+  }
+  .input:focus{
+    outline:none; box-shadow:0 0 0 3px rgba(148,163,184,0.5);
+  }
+  .section{font-weight:600; margin-top:0.5rem;}
+</style>
 
-  <script>
-    const f = document.getElementById('f'), msg = document.getElementById('msg');
-    f.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(f).entries());
-      msg.textContent = "Küldés...";
-      const res = await fetch('/api/submit', {
-        method: 'POST',
-        headers: {'Content-Type':'application/x-www-form-urlencoded'},
-        body: new URLSearchParams(data)
-      });
-      if (res.ok) { msg.textContent = "Sikeres beküldés. Köszönjük!"; f.reset(); }
-      else { msg.textContent = "Hiba: " + (await res.text()); }
-    });
-  </script>
-</body>
-</html>`;
+<script>
+const f=document.getElementById('f'), msg=document.getElementById('msg');
+f.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const data=Object.fromEntries(new FormData(f).entries());
+  msg.textContent="Küldés...";
+  const res=await fetch('/api/submit',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(data)});
+  msg.textContent = res.ok ? "Sikeres beküldés. Köszönjük!" : "Hiba: "+(await res.text());
+  if(res.ok) f.reset();
+});
+</script>
+</body></html>`;
 }
