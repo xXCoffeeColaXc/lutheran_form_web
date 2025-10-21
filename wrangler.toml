@@ -1,5 +1,5 @@
 name = "zuglo-form"
-main = "src/worker.ts"
+main = "src/workers.ts"
 compatibility_date = "2025-10-21"
 
 # Allow CORS only from your site (set after you add the domain)
