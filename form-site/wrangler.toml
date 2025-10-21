@@ -4,17 +4,17 @@ compatibility_date = "2024-09-24"
 
 # Allow CORS only from your site (set after you add the domain)
 [vars]
-ALLOWED_ORIGIN = "https://forms.yourdomain.hu"
+ALLOWED_ORIGIN = "https://forms.zuglo-lutheran-form.hu"
 
 # Daily backup at 03:00 UTC (adjust as needed)
 [triggers]
 crons = ["0 3 * * *"]
 
-# Bind D1 (after you create the DB, paste database_id)
+# Bind D1
 [[d1_databases]]
 binding = "DB"
-database_name = "zuglo_form"
-database_id = "REPLACE_WITH_D1_ID"
+database_name = "developer"
+database_id = "7ca26c1a-b88f-4635-85c8-6091f4004b5e"
 
 # Optional: enable R2 backups (comment out if not using)
 # [[r2_buckets]]
