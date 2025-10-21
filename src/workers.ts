@@ -316,7 +316,7 @@ function indexHTML(){
       </div>
       <div>
         <label class="label">Keresztelés éve</label>
-        <input type="number" name="keresztseg_eve" class="input" placeholder="YYYY">
+        <input type="number" name="keresztseg_eve" class="input" placeholder="ÉÉÉÉ">
       </div>
     </section>
 
@@ -340,7 +340,7 @@ function indexHTML(){
       </div>
       <div>
         <label class="label">Konfirmáció éve</label>
-        <input type="number" name="konfirmacio_eve" class="input" placeholder="YYYY">
+        <input type="number" name="konfirmacio_eve" class="input" placeholder="ÉÉÉÉ">
       </div>
     </section>
 
@@ -366,7 +366,7 @@ function indexHTML(){
       </div>
       <div>
         <label class="label">Házasságkötés éve</label>
-        <input type="number" name="hazassag_eve" class="input" placeholder="YYYY">
+        <input type="number" name="hazassag_eve" class="input" placeholder="ÉÉÉÉ">
       </div>
       <div>
         <label class="label">Házastárs neve</label>
@@ -439,6 +439,33 @@ function indexHTML(){
     const errModal = document.getElementById('errModal');
     const errList  = document.getElementById('errList');
     const closeErr = document.getElementById('closeErr');
+
+    // Hungarian validation messages
+    (function attachHuValidation(){
+      const requiredEls = document.querySelectorAll('[required]');
+
+      requiredEls.forEach(el => {
+        // Clear message on input
+        el.addEventListener('input', () => el.setCustomValidity(''));
+
+        // Set custom message when invalid
+        el.addEventListener('invalid', () => {
+          let msg = 'Kérjük, töltse ki ezt a mezőt.';
+
+          if (el.name === 'szuletesi_datum') {
+            msg = 'Kérjük adja meg a születési időt: ÉÉÉÉ/HH/NN (pl. 1990/05/17).';
+          } else if (el.type === 'email') {
+            msg = 'Kérjük, érvényes e-mail címet adjon meg.';
+          } else if (el.name === 'telefon') {
+            msg = 'Kérjük, adjon meg telefonszámot (pl. 06 1 123 4567).';
+          } else if (el.type === 'checkbox') {
+            msg = 'Kérjük, jelölje be ezt a mezőt.';
+          }
+
+          el.setCustomValidity(msg);
+        });
+      });
+    })();
 
     function showErrors(list){
       f.querySelectorAll('.input').forEach(i => i.classList.remove('error'));
