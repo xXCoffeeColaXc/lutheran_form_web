@@ -4,7 +4,7 @@ compatibility_date = "2025-10-21"
 
 # Allow CORS only from your site (set after you add the domain)
 [vars]
-ALLOWED_ORIGIN = "https://forms.zuglo-lutheran-form.hu"
+ALLOWED_ORIGIN = "https://zuglo-lutheran-form.com"
 
 # Daily backup at 03:00 UTC (adjust as needed)
 [triggers]
