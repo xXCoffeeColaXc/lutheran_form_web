@@ -50,8 +50,8 @@ export default {
     }
 
     // Serve privacy PDF at a clean URL
-    if (url.pathname === "/adatvedelmi-es-adatbiztonsagi-szabalyzat.pdf") {
-      const obj = await env.ASSETS.get("adatvedelmi-es-adatbiztonsagi-szabalyzat.pdf");
+    if (url.pathname === "/adatvedelmi_es_adatbiztonsagi_szabalyzat.pdf") {
+      const obj = await env.ASSETS.get("adatvedelmi_es_adatbiztonsagi_szabalyzat.pdf");
       if (!obj) return new Response("Not found", { status: 404 });
       return new Response(obj.body, {
         headers: {
@@ -165,6 +165,10 @@ function validate(b){
   const e = [];
 
   if (!b.nev || !String(b.nev).trim()) e.push("Név kötelező");
+  if (!b.iranyitoszam || !String(b.iranyitoszam).trim()) e.push("Irányítószám kötelező");
+  if (!b.varos || !String(b.varos).trim()) e.push("Város kötelező");
+  if (!b.utca_hazszam || !String(b.utca_hazszam).trim()) e.push("Utca, házszám kötelező");
+
   // normalize date
   const iso = normDateHU(b.szuletesi_datum);
   if (iso === null) e.push("Születési idő formátuma: ÉÉÉÉ/HH/NN (pl. 1990/05/17)");
@@ -263,6 +267,8 @@ function indexHTML(){
   .modal h3 { font-weight:600; margin-bottom:.5rem; }
   .modal ul { list-style: disc; margin-left:1.25rem; }
   .modal.show { display:flex; }
+  label a { text-decoration: underline; }
+  label a:hover { text-decoration-thickness: 2px; }
 </style>
 </head>
 
@@ -391,15 +397,15 @@ function indexHTML(){
     <section class="grid gap-4 md:grid-cols-2">
       <div>
         <label class="label">Irányítószám</label>
-        <input name="iranyitoszam" class="input" placeholder="1146">
+        <input name="iranyitoszam" required class="input" placeholder="1146">
       </div>
       <div>
         <label class="label">Város</label>
-        <input name="varos" class="input" placeholder="Budapest">
+        <input name="varos" required class="input" placeholder="Budapest">
       </div>
       <div class="md:col-span-2">
         <label class="label">Utca, házszám</label>
-        <input name="utca_hazszam" class="input">
+        <input name="utca_hazszam" required class="input">
       </div>
       <div class="md:col-span-2">
         <label class="label">Épület, emelet, ajtó</label>
@@ -427,7 +433,14 @@ function indexHTML(){
       </div>
       <div class="grid gap-2">
         <label class="inline-flex gap-2 items-center"><input type="checkbox" name="consent_contact" value="1" required><span>Hozzájárulok a kapcsolattartáshoz és tájékoztatókhoz *</span></label>
-        <label class="inline-flex gap-2 items-center"><input type="checkbox" name="consent_processing" value="1" required><span>Megismertem és elfogadom az adatkezelési tájékoztatót *</span></label>
+        <label class="inline-flex gap-2 items-center"><input type="checkbox" name="consent_processing" value="1" required>
+          <span>
+            Megismertem és elfogadom az 
+            <a class="underline" href="/adatvedelmi-es-adatbiztonsagi-szabalyzat.pdf" target="_blank" rel="noopener">
+            adatkezelési tájékoztatót (PDF)
+            </a>
+            *
+          </span></label>
       </div>
       <!-- hely / dátum / aláírás intentionally removed -->
     </section>
@@ -435,11 +448,6 @@ function indexHTML(){
     <button class="bg-slate-900 text-white rounded-xl px-5 py-2.5 shadow hover:opacity-90">Beküldés</button>
     <p id="msg" class="text-sm"></p>
 
-    <p class="text-xs text-slate-600">
-      <a class="underline" href="/adatvedelmi_es_adatbiztonsagi_szabalyzat.pdf" target="_blank" rel="noopener">
-        Adatvédelmi és adatbiztonsági szabályzat (PDF)
-      </a>
-    </p>
   </form>
 </main>
 
@@ -470,13 +478,18 @@ function indexHTML(){
         // Set custom message when invalid
         el.addEventListener('invalid', () => {
           let msg = 'Kérjük, töltse ki ezt a mezőt.';
-
           if (el.name === 'szuletesi_datum') {
             msg = 'Kérjük adja meg a születési időt: ÉÉÉÉ/HH/NN (pl. 1990/05/17).';
           } else if (el.type === 'email') {
             msg = 'Kérjük, érvényes e-mail címet adjon meg.';
           } else if (el.name === 'telefon') {
             msg = 'Kérjük, adjon meg telefonszámot (pl. 06 1 123 4567).';
+          } else if (el.name === 'iranyitoszam') {
+            msg = 'Irányítószám kötelező.';
+          } else if (el.name === 'varos') {
+            msg = 'Város kötelező.';
+          } else if (el.name === 'utca_hazszam') {
+            msg = 'Utca, házszám kötelező.';
           } else if (el.type === 'checkbox') {
             msg = 'Kérjük, jelölje be ezt a mezőt.';
           }
@@ -490,6 +503,9 @@ function indexHTML(){
       f.querySelectorAll('.input').forEach(i => i.classList.remove('error'));
       const map = [
         [/Név kötelező/i, 'nev'],
+        [/Irányítószám kötelező/i, 'iranyitoszam'],
+        [/Város kötelező/i, 'varos'],
+        [/Utca, házszám kötelező/i, 'utca_hazszam'],
         [/Születési idő/i, 'szuletesi_datum'],
         [/Telefonszám/i, 'telefon'],
         [/kapcsolattartási/i, 'consent_contact'],
