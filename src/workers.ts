@@ -396,15 +396,15 @@ function indexHTML(){
     <h2 class="section">Lakcím</h2>
     <section class="grid gap-4 md:grid-cols-2">
       <div>
-        <label class="label">Irányítószám</label>
+        <label class="label">Irányítószám *</label>
         <input name="iranyitoszam" required class="input" placeholder="1146">
       </div>
       <div>
-        <label class="label">Város</label>
+        <label class="label">Város *</label>
         <input name="varos" required class="input" placeholder="Budapest">
       </div>
       <div class="md:col-span-2">
-        <label class="label">Utca, házszám</label>
+        <label class="label">Utca, házszám *</label>
         <input name="utca_hazszam" required class="input">
       </div>
       <div class="md:col-span-2">
