@@ -436,7 +436,7 @@ function indexHTML(){
         <label class="inline-flex gap-2 items-center"><input type="checkbox" name="consent_processing" value="1" required>
           <span>
             Megismertem és elfogadom az 
-            <a class="underline" href="/adatvedelmi-es-adatbiztonsagi-szabalyzat.pdf" target="_blank" rel="noopener">
+            <a class="underline" href="/adatvedelmi_es_adatbiztonsagi_szabalyzat.pdf" target="_blank" rel="noopener">
             adatkezelési tájékoztatót (PDF)
             </a>
             *
