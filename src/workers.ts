@@ -4,6 +4,7 @@ export interface Env {
   ADMIN_TOKEN?: string;
   // Optional if you enabled R2 in wrangler.toml
   BACKUPS?: R2Bucket;
+  ASSETS: R2Bucket;
 }
 
 const ok = (data: unknown, origin?: string) =>
@@ -45,6 +46,18 @@ export default {
     if (url.pathname === "/" && req.method === "GET") {
       return new Response(indexHTML(), {
         headers: { "content-type": "text/html; charset=utf-8" },
+      });
+    }
+
+    // Serve privacy PDF at a clean URL
+    if (url.pathname === "/adatvedelmi-es-adatbiztonsagi-szabalyzat.pdf") {
+      const obj = await env.ASSETS.get("adatvedelmi-es-adatbiztonsagi-szabalyzat.pdf");
+      if (!obj) return new Response("Not found", { status: 404 });
+      return new Response(obj.body, {
+        headers: {
+          "content-type": "application/pdf",
+          "cache-control": "public, max-age=31536000, immutable"
+        }
       });
     }
 
@@ -421,6 +434,12 @@ function indexHTML(){
 
     <button class="bg-slate-900 text-white rounded-xl px-5 py-2.5 shadow hover:opacity-90">Beküldés</button>
     <p id="msg" class="text-sm"></p>
+
+    <p class="text-xs text-slate-600">
+      <a class="underline" href="/adatvedelmi_es_adatbiztonsagi_szabalyzat.pdf" target="_blank" rel="noopener">
+        Adatvédelmi és adatbiztonsági szabályzat (PDF)
+      </a>
+    </p>
   </form>
 </main>
 

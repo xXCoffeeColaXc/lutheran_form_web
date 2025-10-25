@@ -20,3 +20,7 @@ database_id = "7ca26c1a-b88f-4635-85c8-6091f4004b5e"
 # [[r2_buckets]]
 # binding = "BACKUPS"
 # bucket_name = "zuglo-form-backups"
+
+[[r2_buckets]]
+binding = "ASSETS"
+bucket_name = "zuglo-assets"
