@@ -2,3 +2,4 @@
 *.csv
 download_data.py
 todo.txt
+__pycache__/
