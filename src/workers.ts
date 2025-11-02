@@ -260,14 +260,20 @@ async function notifyUser(env: Env, data: any){
 
     const subject = "Tagnyilvántartási űrlap visszaigazolás - Zuglói Evangélikus Egyházközség";
     const html = `
-      <div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.5">
-        <h2>Megkaptuk az űrlapját</h2>
-        <p>Köszönjük, <b>${escapeHTML(data.nev || "")}</b>! Az űrlapot sikeresen rögzítettük.</p>
-        <p><b>Dátum:</b> ${escapeHTML(new Date().toLocaleString("hu-HU"))}</p>
-        <p>Amennyiben hibásan adta meg az adatokat, küldje be újra az űrlapot. Mindig a legkésőbbi beküldött űrlap lesz érvényes.</p>
-        <hr>
-        <p style="font-size:12px;color:#6b7280">
-          Ez egy automatikus értesítés a zuglo-lutheran-form.com oldalról.
+      <div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.6">
+        <h2 style="margin:0 0 .25rem 0">Sikeres beküldés</h2>
+        <p style="margin:.25rem 0">Kedves <b>${escapeHTML(data.nev || "")}</b>!</p>
+        <p style="margin:.25rem 0">
+          Köszönjük, megkaptuk az űrlapját. A beküldés ideje:
+          <b>${escapeHTML(new Date().toLocaleString("hu-HU"))}</b>.
+        </p>
+        <p style="margin:.25rem 0">
+          Ha módosítani szeretné az adatokat, küldje be az űrlapot újra.
+          Mindig a <b>legutóbb beküldött</b> változat lesz érvényes.
+        </p>
+        <hr style="border:none;border-top:1px solid #e5e7eb;margin:12px 0">
+        <p style="font-size:12px;color:#6b7280;margin:0">
+          Ez egy automatikus üzenet, kérjük ne válaszoljon rá
         </p>
       </div>
     `;
