@@ -2,9 +2,11 @@ export interface Env {
   DB: D1Database;
   ALLOWED_ORIGIN: string;
   ADMIN_TOKEN?: string;
-  // Optional if you enabled R2 in wrangler.toml
   BACKUPS?: R2Bucket;
   ASSETS: R2Bucket;
+
+  RESEND_API_KEY?: string;
+  NOTIFY_FROM?: string;
 }
 
 const ok = (data: unknown, origin?: string) =>
@@ -112,6 +114,9 @@ export default {
 
 
       await stmt.run();
+      // fire-and-forget email (don’t block user)
+      ctx.waitUntil(notifyUser(env, data));
+
       return ok({ status: "ok" }, origin);
     }
 
@@ -151,7 +156,7 @@ function allowOrigin(origin: string | null, allowed: string) {
 
 function required(v?: string) { return (v ?? "").trim().length > 0; }
 const phoneRe = /^0[1-9](\s?\d{1,2})?(\s?\d{3})\s?\d{4}$/; // accepts 06 1 123 4567 etc.
-const dateHU = /^\d{4}[\/\-.]\d{2}[\/\-.]\d{2}$/;
+const dateHU = /^\d{4}[\/\-.]\d{2}[\/\-.]\d{2}$/; // accepts ÉÉÉÉ/HH/NN
 
 function normDateHU(s) {
   if (!s) return "";
@@ -240,6 +245,53 @@ function toCSV(rows: any[]): string {
   }
   return csv.join("\n");
 }
+
+function escapeHTML(s:string){ return String(s ?? "")
+  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
+
+const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+async function notifyUser(env: Env, data: any){
+  try{
+    if (!env.RESEND_API_KEY) return;
+    const to = String(data.email || "").trim();
+    if (!emailRe.test(to)) return; // nothing to send
+
+    const subject = "Tagnyilvántartási űrlap visszaigazolás - Zuglói Evangélikus Egyházközség";
+    const html = `
+      <div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.5">
+        <h2>Megkaptuk az űrlapját</h2>
+        <p>Köszönjük, <b>${escapeHTML(data.nev || "")}</b>! Az űrlapot sikeresen rögzítettük.</p>
+        <p><b>Dátum:</b> ${escapeHTML(new Date().toLocaleString("hu-HU"))}</p>
+        <p>Amennyiben hibásan adta meg az adatokat, küldje be újra az űrlapot. Mindig a legkésőbbi beküldött űrlap lesz érvényes.</p>
+        <hr>
+        <p style="font-size:12px;color:#6b7280">
+          Ez egy automatikus értesítés a zuglo-lutheran-form.com oldalról.
+        </p>
+      </div>
+    `;
+
+    const payload:any = {
+      from: env.NOTIFY_FROM || "no-reply@zuglo-lutheran-form.com",
+      to, subject, html,
+    };
+
+    await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+  } catch (err) {
+    // log-only; never break user flow
+    console.error("notifyUser() failed", err);
+  }
+}
+
+
 
 /** Single-file, TailwindCDN, minimal + modern */
 function indexHTML(){

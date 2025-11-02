@@ -1,3 +1,4 @@
 .env
 *.csv
 download_data.py
+todo.txt
